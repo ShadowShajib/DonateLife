@@ -1,0 +1,118 @@
+<!-- ===== Newsletter CTA ===== -->
+<section class="bg-gray-100">
+  <div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 pt-10">
+    <div class="mx-auto rounded-lg bg-[#C3474D] text-white px-6 py-8 md:px-10 md:py-10 max-w-5xl shadow">
+      <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <h3 class="text-2xl md:text-3xl font-extrabold">Join To Get Our Newsletter</h3>
+          <p class="mt-2 text-white/90">
+           
+          </p>
+        </div>
+        <form class="flex w-full gap-3">
+          <input
+            type="email"
+            placeholder="Your Email Address"
+            class="input input-bordered w-full bg-white text-gray-800"
+          />
+          <button class="btn bg-black hover:bg-gray-800 text-white border-none">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="relative overflow-hidden bg-gray-100">
+  <!-- decorative waves -->
+  <!-- <div class="pointer-events-none absolute inset-x-0 bottom-0">
+    <svg viewBox="0 0 1440 240" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+      <path d="M0 120c120 40 240 60 360 60s240-20 360-60 240-40 360 0 240 60 360 60v120H0V120Z" fill="#EFD9DB" opacity=".55"/>
+      <path d="M0 160c120 40 240 60 360 60s240-20 360-60 240-40 360 0 240 60 360 60v80H0v-140Z" fill="#EAC9CC" opacity=".55"/>
+    </svg>
+  </div> -->
+
+  <div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 pt-8 pb-11">
+    <div class="grid gap-10 md:grid-cols-4 z-100">
+      <!-- Brand + blurb -->
+      <div>
+        <div class="flex items-center gap-2 text-2xl font-extrabold">
+          <i class="fa-solid fa-heart text-[#C3474D]"></i>
+          <span><span class="text-[#C3474D]">Donate</span>Life</span>
+        </div>
+        <p class="mt-4 text-gray-600">
+          Connect with us in social platforms
+        </p>
+
+        <div class="mt-5 flex gap-2">
+          <a class="btn btn-sm bg-[#C3474D] border-none hover:bg-[#b53f45] text-white rounded-md">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a class="btn btn-sm bg-[#C3474D] border-none hover:bg-[#b53f45] text-white rounded-md">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+          <a class="btn btn-sm bg-[#C3474D] border-none hover:bg-[#b53f45] text-white rounded-md">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a class="btn btn-sm bg-[#C3474D] border-none hover:bg-[#b53f45] text-white rounded-md">
+            <i class="fa-brands fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-lg font-semibold">Quick Links</h4>
+        <div class="mt-2 h-0.5 w-12 bg-[#C3474D]"></div>
+        <ul class="mt-4 space-y-3 text-gray-700">
+          <li><a href="#" class="link link-hover">About Us</a></li>
+          
+          <li><a href="#" class="link link-hover">FAQ</a></li>
+          <li><a href="#" class="link link-hover">Term &amp; Condition</a></li>
+        </ul>
+      </div>
+
+      <!-- Useful Links -->
+      <div>
+        <h4 class="text-lg font-semibold">Useful Links</h4>
+        <div class="mt-2 h-0.5 w-12 bg-[#C3474D]"></div>
+        <ul class="mt-4 space-y-3 text-gray-700">
+          <li class="flex items-start gap-3">
+            <i class="fa-solid fa-location-dot text-[#C3474D] mt-1"></i>
+            <span>Dhanmondi,Dhaka</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <i class="fa-solid fa-phone text-[#C3474D]"></i>
+            <a href="tel:+6283148912035" class="link link-hover">+880 1********</a>
+          </li>
+          <li class="flex items-center gap-3">
+            <i class="fa-regular fa-envelope text-[#C3474D]"></i>
+            <a href="mailto:redirect@mail.com" class="link link-hover">xyz@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Work Hours & CTA -->
+      <div>
+        <h4 class="text-lg font-semibold">Work Hours</h4>
+        <div class="mt-2 h-0.5 w-12 bg-[#C3474D]"></div>
+        <p class="mt-4 text-gray-700">24/7 service</p>
+
+        <p class="mt-6 font-semibold">Need For Help? Call Us</p>
+        <a class="btn mt-3 bg-[#C3474D] hover:bg-[#b53f45] text-white border-none normal-case">
+          <i class="fa-solid fa-phone-volume mr-2"></i> Contact Us
+        </a>
+      </div>
+    </div>
+
+    <!-- bottom line -->
+    <div class="mt-14 text-center text-sm text-gray-500">
+      Copyright © <span id="yearSpan"></span>. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // optional: current year
+  document.getElementById('yearSpan').textContent = new Date().getFullYear();
+</script>
