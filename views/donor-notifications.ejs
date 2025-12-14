@@ -1,80 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('./partials/head.ejs'); %>
-    <title>Donor Notifications</title>
-  </head>
-  <body class="min-h-screen"
-  style="
-      background-image: url('/pics/recipient.png');
-      background-size: cover;
-      background-position: center;
-    "
-  >
-    <!-- Sidebar -->
-    <div class="flex min-h-screen">
-      <%- include('./partials/donor-sidebar.ejs') %>
+<head>
+  <%- include('./partials/head.ejs'); %>
+  <title>Donor Notifications</title>
+</head>
+<body class="min-h-screen bg-cover bg-center" style="background-image: url('/pics/recipient.png');">
 
-      <!-- Main Panel -->
-      <main class="flex-1 p-2 space-y-10">
-        <!-- Dashboard Layout -->
-        <div class="min-h-screen p-6">
-          <h2 class="text-2xl font-bold mb-6">Blood Donation Requests</h2>
+<div class="flex min-h-screen">
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 " >
-            <% bloodRequests.forEach(function(request) { %>
-            <div
-              class="bg-white p-6 rounded-lg shadow-md w-full sm:w-96 flex flex-col"
-            >
-              <div class="flex items-center mb-4">
-                <!-- Blood Group -->
-                <div class="text-xl font-semibold text-gray-800 mr-4">
-                  Blood Group: <%= request.bloodgroup %>
-                </div>
-              </div>
+  <!-- Sidebar -->
+  <%- include('./partials/donor-sidebar.ejs') %>
 
-              <div class="mb-4">
-                <!-- Location -->
-                <div class="text-md text-gray-600 mb-2">
+  <!-- Main Panel -->
+  <main class="flex-1 p-6 space-y-10">
+
+    <!-- Page Header -->
+    <header>
+      <h1 class="text-3xl font-bold text-gray-800">Blood Donation Requests</h1>
+    </header>
+
+    <!-- Blood Requests Grid -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% bloodRequests.forEach(function(request) { %>
+        <article class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between">
+
+          <!-- Request Info -->
+          <div class="mb-4">
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Blood Group: <%= request.bloodgroup %></h2>
+
+            <div class="text-gray-600 text-md mb-2 flex flex-wrap items-center">
+                <span class="mr-2">
                   Location: <%= request.location.name %> - <%= request.location.location %>
-                </div>
-
-                <!-- Bags Needed -->
-                <div class="text-md text-gray-600 mb-2">
-                  Bags Needed: <%= request.bags %>
-                </div>
-
-                <!-- Requested Date -->
-                <div class="text-sm text-gray-500 mb-2">
-                  Requested Date: <%= new
-                  Date(request.requestedDate).toLocaleDateString() %>
-                </div>
-
-                <!-- Phone Number -->
-                <div class="text-md text-gray-600 mb-2">
-                  Recipient Phone: <%= request.phone ? request.phone : "Contact Hospital" %>
-                </div>
-              </div>
-
-              <!-- Accept Button -->
-              <form action="/donor/dashboard/accept-request" method="POST">
-                <input
-                  type="hidden"
-                  name="requestId"
-                  value="<%= request._id %>"
-                />
-                <button
-                  type="submit"
-                  class="bg-green-600 text-white py-2 px-4 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                </span>
+              <% if(request.location.lat && request.location.lng) { %>
+                <a
+                        href="https://www.google.com/maps/search/?api=1&query=<%= request.location.lat %>,<%= request.location.lng %>"
+                        target="_blank"
+                        class="ml-auto bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 whitespace-nowrap"
                 >
-                  Accept Request
-                </button>
-              </form>
+                  Google Map
+                </a>
+              <% } %>
             </div>
-            <% }); %>
+
+            <p class="text-gray-600 text-md mb-2">Bags Needed: <%= request.bags %></p>
+            <p class="text-gray-500 text-sm mb-2">Requested Date: <%= new Date(request.requestedDate).toLocaleDateString() %></p>
+            <p class="text-gray-600 text-md">Recipient Phone: <%= request.phone ? request.phone : "Contact Hospital" %></p>
           </div>
-        </div>
-      </main>
-    </div>
-  </body>
+
+          <!-- Accept Button -->
+          <form action="/donor/dashboard/accept-request" method="POST" class="mt-auto">
+            <input type="hidden" name="requestId" value="<%= request._id %>"/>
+            <button
+                    type="submit"
+                    class="w-full bg-green-600 text-white py-2 px-4 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              Accept Request
+            </button>
+          </form>
+
+        </article>
+      <% }); %>
+    </section>
+
+  </main>
+</div>
+
+</body>
 </html>

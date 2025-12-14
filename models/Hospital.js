@@ -3,17 +3,13 @@ const mongoose = require("mongoose");
 const hospitalSchema = new mongoose.Schema(
   {
     name: {
-      type: String,
-      enum: [
-        "Popular Hospital Bangladesh",
-        "Labaid Specialized Hospital Bangladesh",
-        "National Heart Foundation Bangladesh",
-      ],
-      required: true,
+      type: String, required: true, unique: true
     },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     location: { type: String, required: true },
+      lat: { type: String, required: true },
+      lng: { type: String, required: true },
     role: { type: String, default: "hospital" },
     inventory: {
       blood: {

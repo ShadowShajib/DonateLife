@@ -172,96 +172,20 @@ const postRegisterPage = async (req, res) => {
 
 // Hopital Code
 const getHospitalRegisterPage = (req, res) => {
-  // Dummy Values For Hospitals
-  const hospitalsArray = [
-    {
-      title: "Popular Hospital Bangladesh",
-      areas: [
-        "Dhanmondi",
-        "English Road",
-        "Shantinagar Unit-1",
-        "Shantinagar Unit-2",
-        "Narayanganj",
-        "Savar",
-        "Uttara Unit-1",
-        "Uttara Unit-2",
-        "Shyamoli",
-        "Mirpur Unit-1",
-        "Mirpur Unit-2",
-        "Badda",
-        "Gazipur",
-        "Noakhali",
-        "Chattogram",
-        "Rajshahi",
-        "Rangpur Unit-1",
-        "Rangpur Unit-2",
-        "Dinajpur",
-        "Mymensingh",
-        "Bogra Unit-1",
-        "Bogra Unit-2",
-        "Bogra Unit-3",
-        "Khulna",
-        "Kushtia",
-        "Barishal",
-      ],
-    },
-    {
-      title: "Labaid Specialized Hospital Bangladesh",
-      areas: [
-        "Dhanmondi",
-        "Uttara Unit-1",
-        "Uttara Unit-2",
-        "Kalabagan",
-        "Mirpur",
-        "Gulshan",
-        "Malibagh",
-        "Badda",
-        "Savar",
-        "Narayanganj",
-        "Faridpur",
-        "Sylhet",
-        "Chattogram",
-        "Noakhali",
-        "Cumilla",
-        "Khulna",
-        "Barishal Unit-1",
-        "Barishal Unit-2",
-        "Bogura",
-        "Naogaon",
-        "Pabna",
-        "Rajshahi",
-        "Rangpur",
-        "Dinajpur",
-        "Doyaganj",
-        "Feni",
-        "Magura",
-        "Bhola",
-        "Jessore",
-        "Chandpur",
-        "Tangail",
-        "Narsingdi",
-      ],
-    },
-    {
-      title: "National Heart Foundation Bangladesh",
-      areas: ["Mirpur", "Sylhet"],
-    },
-  ];
-
   if (req.session.userId) return res.redirect("/");
-  return res.render("register-hospital", { hospitalsArray, error: null });
+  return res.render("register-hospital", {error: null });
 };
 
 const registerHospital = async (req, res) => {
   try {
     // Step 1: Extract data from request body
-    const { name, email, password, confirmPassword, location } = req.body;
+    const { name, email, password, confirmPassword, location , lat, lng } = req.body;
 
     // Basic input checks – keep simple, expand as needed
-    if (!name || !email || !password || !confirmPassword || !location) {
+    if (!name || !email || !password || !confirmPassword || !location || !lat || !lng) {
       return res.status(400).render("register-hospital", {
         error: "All fields are required.",
-        values: { name, email, password, confirmPassword, location },
+        values: { name, email, password, confirmPassword, location, lat, lng },
       });
     }
 
@@ -305,6 +229,8 @@ const registerHospital = async (req, res) => {
       email,
       password: hashedPassword,
       location,
+      lat,
+      lng
     });
 
     // Step 6: Save the hospital to the database

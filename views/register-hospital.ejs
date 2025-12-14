@@ -1,128 +1,185 @@
 <!DOCTYPE html>
 <html data-theme="light" lang="en">
-  <head>
-    <%- include('./partials/head.ejs'); %>
-    <title>Register | DonateLife</title>
-  </head>
-  <body
-    class="bg-red-100 flex items-center justify-start min-h-screen"
-    style="
-      background-image: url('/pics/login.png');
-      background-size: cover;
-      background-position: center;
-    "
+<head>
+  <%- include('./partials/head.ejs'); %>
+  <title>Register | DonateLife</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- GeoSearch -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@latest/dist/geosearch.css" />
+  <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+
+</head>
+
+<body
+        class="bg-red-100 flex items-center justify-start min-h-screen"
+        style="background-image: url('/pics/login.png'); background-size: cover; background-position: center;"
+>
+
+<div class="container mx-auto">
+  <form
+          method="POST"
+          action="/register/hospital"
+          class="bg-white/20 backdrop-blur-sm shadow-lg rounded-xl px-8 py-10 w-full max-w-sm"
   >
-    <div class="container mx-auto">
-      <form
-        method="POST"
-        action="/register/hospital"
-        class="bg-white/20 backdrop-blur-sm shadow-lg rounded-xl px-8 py-10 w-full max-w-sm"
-      >
-        <h1 class="text-3xl font-bold text-center text-red-600 mb-6">
-          Register
-        </h1>
+    <h1 class="text-3xl font-bold text-center text-red-600 mb-6">
+      Register
+    </h1>
 
-        <!-- Name Field -->
-        <label class="form-control w-full mb-6">
-          <span class="label-text font-semibold">Name</span>
-          <select name="name" required class="select select-bordered w-full">
-            <option value="">Select Hospital</option>
-            <% hospitalsArray.forEach(hospital => { %>
-            <option value="<%= hospital.title %>"><%= hospital.title %></option>
-            <% }) %>
-            <!-- Popular Hospital Branches -->
-          </select>
-        </label>
+    <!-- Name -->
+    <label class="form-control w-full mb-4">
+      <span class="label-text font-semibold">Name of Hospital</span>
+      <input type="text" name="name" required class="input input-bordered w-full" />
+    </label>
 
-        <!-- Email Field -->
-        <label class="form-control w-full mb-4">
-          <span class="label-text font-semibold">Email</span>
-          <input
-            type="email"
-            name="email"
-            required
-            class="input input-bordered w-full"
-            pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
-          />
-        </label>
+    <!-- Email -->
+    <label class="form-control w-full mb-4">
+      <span class="label-text font-semibold">Email</span>
+      <input
+              type="email"
+              name="email"
+              required
+              class="input input-bordered w-full"
+              pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
+      />
+    </label>
 
-        <!-- Password Field -->
-        <label class="form-control w-full mb-6">
-          <span class="label-text font-semibold"
-            >Password (At least 8 characters)</span
-          >
-          <input
-            id="password"
-            type="password"
-            name="password"
-            required
-            class="input input-bordered w-full"
-            pattern="^.{8,}$"
-          />
-        </label>
+    <!-- Password -->
+    <label class="form-control w-full mb-6">
+      <span class="label-text font-semibold">Password (At least 8 characters)</span>
+      <input id="password" type="password" name="password" required class="input input-bordered w-full" pattern="^.{8,}$" />
+    </label>
 
-        <!-- Confirm Password Field -->
-        <label class="form-control w-full mb-6">
-          <span class="label-text font-semibold">Confirm Password</span>
-          <input
-            id="confirmPassword"
-            type="password"
-            name="confirmPassword"
-            required
-            class="input input-bordered w-full"
-            pattern="^.{8,}$"
-          />
-        </label>
+    <!-- Confirm Password -->
+    <label class="form-control w-full mb-6">
+      <span class="label-text font-semibold">Confirm Password</span>
+      <input id="confirmPassword" type="password" name="confirmPassword" required class="input input-bordered w-full" pattern="^.{8,}$" />
+    </label>
 
-        <!-- Location Field -->
-        <label class="form-control w-full mb-6">
-          <span class="label-text font-semibold">Location</span>
-          <select
-            name="location"
-            required
-            class="select select-bordered w-full"
-          >
-            <option value="">Select Location</option>
-            <% hospitalsArray.forEach(hospital => { %>
-            <optgroup label="<%= hospital.title %>">
-              <% hospital.areas.forEach(area => { %>
-              <option value="<%= area %>"><%= area %></option>
-              <% }) %>
-            </optgroup>
-            <% }) %>
-          </select>
-        </label>
+    <!-- Auto-filled location name -->
+    <label class="form-control w-full mb-6">
+      <span class="label-text font-semibold">Location Name (Auto-filled)</span>
+      <input
+              id="location"
+              type="text"
+              name="location"
+              required
+              readonly
+              class="input input-bordered w-full bg-gray-100"
+      />
+    </label>
 
-        <!-- Error Message -->
-        <p id="errorMessage" class="text-red-500"></p>
+    <!-- Map + Search UI -->
+    <div>
+      <h3 class="font-semibold mb-2">Select Map Location</h3>
 
-        <!-- Submit Button -->
-        <button
-          id="submitter"
-          type="submit"
-          class="btn btn-primary w-full bg-red-600 hover:bg-red-700 border-none"
-        >
-          Register
-        </button>
+      <input
+              id="searchBox"
+              type="text"
+              placeholder="Search location..."
+              class="input input-bordered w-full mb-2"
+      />
 
-        <!-- Redirect to Login Page -->
-        <p class="text-center mt-4 text-sm text-gray-600">
-          Already have an account?
-          <a href="/login" class="text-red-600 font-medium hover:underline"
-            >Login</a
-          >
-        </p>
+      <div id="map" style="height: 350px; border-radius: 10px;"></div>
 
-        <!-- Register as Hospital Link -->
-        <p class="text-center mt-4 text-sm text-gray-600">
-          <a
-            href="/register/hospital"
-            class="text-red-600 font-medium hover:underline"
-            >Register</a
-          >
-          as a hospital
-        </p>
-      </form>
+      <!-- Hidden coords -->
+      <input type="hidden" id="lat" name="lat">
+      <input type="hidden" id="lng" name="lng">
     </div>
-  </body>
+
+    <!-- Error -->
+    <p id="errorMessage" class="text-red-500"></p>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-primary w-full bg-red-600 hover:bg-red-700 border-none">
+      Register
+    </button>
+
+    <p class="text-center mt-4 text-sm text-gray-600">
+      Already have an account?
+      <a href="/login" class="text-red-600 font-medium hover:underline">Login</a>
+    </p>
+
+    <p class="text-center mt-4 text-sm text-gray-600">
+      <a href="/register/hospital" class="text-red-600 font-medium hover:underline">Register</a>
+      as a hospital
+    </p>
+  </form>
+</div>
+
+<!-- FULL MAP SCRIPT -->
+<script>
+  // Default location: Dhaka
+  const initialLat = 23.8103;
+  const initialLng = 90.4125;
+
+  const map = L.map('map').setView([initialLat, initialLng], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(map);
+
+  async function updateInputs(lat, lng) {
+    document.getElementById("lat").value = lat;
+    document.getElementById("lng").value = lng;
+
+    // Reverse geocode through backend
+    try {
+      const data = await fetch(`/register/reverse-location?lat=${lat}&lng=${lng}`)
+              .then(res => res.json());
+      document.getElementById("location").value = data.display_name || "Unknown Location";
+    } catch (err) {
+      console.error("Reverse geocode error:", err);
+      document.getElementById("location").value = "Unknown Location";
+    }
+  }
+
+  // Initialize default inputs
+  updateInputs(initialLat, initialLng);
+
+  // Marker dragend → update inputs
+  marker.on("dragend", () => {
+    const pos = marker.getLatLng();
+    updateInputs(pos.lat, pos.lng);
+  });
+
+  // Map click → move marker
+  map.on("click", (e) => {
+    marker.setLatLng(e.latlng);
+    updateInputs(e.latlng.lat, e.latlng.lng);
+  });
+
+  const searchBox = document.getElementById("searchBox");
+  let debounceTimer;
+
+  searchBox.addEventListener("keyup", () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+      const query = searchBox.value.trim();
+      if (!query) return;
+
+      try {
+        const results = await fetch(`/register/search-location?q=${encodeURIComponent(query)}`)
+                .then(res => res.json());
+        if (results.length > 0) {
+          const lat = results[0].lat;
+          const lng = results[0].lon;
+
+          map.setView([lat, lng], 15);
+          marker.setLatLng([lat, lng]);
+          updateInputs(lat, lng);
+        }
+      } catch (err) {
+        console.error("Forward geocode error:", err);
+      }
+    }, 500);
+  });
+</script>
+
+</body>
 </html>

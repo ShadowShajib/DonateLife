@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Create Blood Request</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { margin-top: 12px; display: block; font-weight: 600; }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 16px;
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #map { height: 330px; width: 100%; margin-top: 10px; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+
+  <h1>Create Blood Request</h1>
+  <p>Select the location where you need blood. This will help match nearby donors.</p>
+
+  <form id="bloodRequestForm" action="/request/create" method="POST" autocomplete="off">
+
+    <label>Blood Group Needed</label>
+    <input name="bloodgroup" type="text" placeholder="Example: B+ or O-" required>
+
+    <label>Bags Needed</label>
+    <input name="bags" type="number" min="1" value="1" required>
+
+    <label>Phone Number</label>
+    <input name="phone" type="text">
+
+    <label>Description / Reason</label>
+    <textarea name="description" rows="3"></textarea>
+
+    <label>Search Location</label>
+    <input id="address" name="address" type="text" placeholder="Start typing hospital or location..." required>
+
+    <!-- Hidden fields populated by map -->
+    <input type="hidden" id="lat" name="lat">
+    <input type="hidden" id="lng" name="lng">
+
+    <div id="map"></div>
+
+    <button type="submit">Submit Request</button>
+  </form>
+
+  <script>
+    const GOOGLE_CLIENT_KEY = "<%= googleClientKey %>";
+
+    function initRequestMap() {
+      const defaultPos = { lat: 23.8103, lng: 90.4125 }; // Dhaka default
+
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: defaultPos,
+        zoom: 12
+      });
+
+      const marker = new google.maps.Marker({
+        map,
+        position: defaultPos,
+        draggable: true
+      });
+
+      // fill form initial values
+      document.getElementById("lat").value = defaultPos.lat;
+      document.getElementById("lng").value = defaultPos.lng;
+
+      // Autocomplete input
+      const input = document.getElementById("address");
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        fields: ["geometry", "formatted_address", "name"]
+      });
+
+      autocomplete.addListener("place_changed", function () {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) {
+          alert("No location details found. Please choose from suggestions.");
+          return;
+        }
+
+        map.setCenter(place.geometry.location);
+        map.setZoom(16);
+        marker.setPosition(place.geometry.location);
+
+        document.getElementById("lat").value = place.geometry.location.lat();
+        document.getElementById("lng").value = place.geometry.location.lng();
+      });
+
+      // Drag marker → update hidden fields
+      marker.addListener("dragend", function () {
+        const pos = marker.getPosition();
+        document.getElementById("lat").value = pos.lat();
+        document.getElementById("lng").value = pos.lng();
+      });
+
+      // Click on map → move marker
+      map.addListener("click", function (e) {
+        marker.setPosition(e.latLng);
+        document.getElementById("lat").value = e.latLng.lat();
+        document.getElementById("lng").value = e.latLng.lng();
+      });
+    }
+  </script>
+
+  <!-- Load Google Maps JS -->
+  <script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=<%= googleClientKey %>&libraries=places&callback=initRequestMap">
+  </script>
+
+</body>
+</html>
